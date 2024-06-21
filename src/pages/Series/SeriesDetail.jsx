@@ -7,3 +7,16 @@ export default function SeriesDetail() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [visibleCount, setVisibleCount] = useState(12);
+
+    useEffect(() => {
+        fetch(`https://podcast-api.netlify.app/id/${id}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            setSeasons(data.seasons);
+            setLoading(false);
+          })
