@@ -26,4 +26,30 @@ export default function Series() {
       if (error) {
         return <div>Error: {error.message}</div>;
       }
+
+      return (
+        <div className="series-container">
+          <h1>Series List</h1>
+          <div className="series-cards">
+            {series.slice(0, visibleCount).map((item) => (
+              <div key={item.id} className="series-card">
+                <Link to={`/series/${item.id}`} key={item.id}>
+                  <img src={item.image} alt={item.title} />
+                  <div className="card-content">
+                  </div>
+                </Link>
+                <h2>{item.title}</h2>
+                <h4>seasons : {item.seasons}</h4>
+              </div>
+            ))}
+          </div>
+          {
+            visibleCount < series.length && (
+              <button onClick={showMoreSeries}>Show More</button>
+            )
+          }
+        </div >
+      );
+    }
+    
     
