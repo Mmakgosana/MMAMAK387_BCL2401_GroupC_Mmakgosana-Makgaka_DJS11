@@ -38,4 +38,13 @@ export default function SeriesDetail() {
       if (error) {
         return <div>Error: {error.message}</div>;
       }
-    
+      return (
+        <div className="series-detail-container">
+          {seasons.length > 0 ? (
+            seasons.slice(0, visibleCount).map((season) => (
+              <Link to={`/series/${id}/episodes`} key={season.id} className="season-card-link">
+                <div className="season-card">
+                  {season.image && <img src={season.image} alt={season.title} className="season-image"  />}
+                  <h2 className="season-title">{season.title}</h2>
+                </div>
+              </Link>
