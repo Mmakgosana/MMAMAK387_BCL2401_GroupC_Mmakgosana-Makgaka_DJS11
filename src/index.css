@@ -25,17 +25,21 @@ header {
   height: 110px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding-block: 10px;
 }
 
 header .site-logo {
   color: red;
-  margin-right: auto;
   text-transform: uppercase;
   font-weight: 900;
   font-size: 15px;
 }
-
+header nav{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
 header a {
   text-decoration: none;
   color: red;
@@ -62,8 +66,9 @@ img {
 }
 
 button {
-  display: block;
-  margin: 20px auto;
+  
+  /* display: block; */
+  margin: 20px 20px;
   padding: 10px 20px;
   font-size: 1em;
   color: white;
