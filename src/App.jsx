@@ -9,6 +9,9 @@ import Layout from "./components/Layout";
 import SeriesDetail from "./pages/Series/SeriesDetail";
 import Episodes from "./pages/Series/Episodes";
 
+
+
+
 export default function App() {
   return (
     <BrowserRouter>
