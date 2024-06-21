@@ -21,4 +21,9 @@ export default function Series() {
     
       const showMoreSeries = () => {
         setVisibleCount((prevCount) => prevCount + 9);
-      };   
+      }; 
+      
+      if (error) {
+        return <div>Error: {error.message}</div>;
+      }
+    
