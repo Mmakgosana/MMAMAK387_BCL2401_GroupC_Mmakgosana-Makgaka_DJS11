@@ -6,7 +6,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: White;
+  background-color: #DBAFA0;
   font-family: "Inter", sans-serif;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -30,19 +30,23 @@ header {
 }
 
 header .site-logo {
-  color: red;
+  color: white;
   text-transform: uppercase;
   font-weight: 900;
-  font-size: 15px;
+  font-size: 20px;
+  width: 100px;
+  height: 100px;
 }
 header nav{
   flex: 1;
   display: flex;
   justify-content: center;
+  width: 100px;
+  height: 100px;
 }
 header a {
   text-decoration: none;
-  color: red;
+  color: #49243E;
   font-weight: 600;
   padding: 5px 20px;
 }
@@ -72,7 +76,7 @@ button {
   padding: 10px 20px;
   font-size: 1em;
   color: white;
-  background-color: #007BFF;
+  background-color: #A87C7C;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -99,7 +103,7 @@ button {
 }
 
 .series-card {
-  background: #fff;
+  background: #A78295;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;

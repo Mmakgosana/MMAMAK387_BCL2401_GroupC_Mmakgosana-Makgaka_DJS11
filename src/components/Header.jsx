@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
+import logo from "../../public/logo_icon.png"
 
 
 
@@ -9,6 +10,7 @@ export default function Header() {
         <header>
             
             <Link className="site-logo" to="/">
+            <img src={logo} alt="Logo" />
             Tech Tonic!
             </Link>
             <nav>
@@ -17,6 +19,9 @@ export default function Header() {
                 </NavLink>
                 <NavLink to="/about">
                     About
+                </NavLink>
+                <NavLink to="/about">
+                    Favourites
                 </NavLink>
             </nav>
            
