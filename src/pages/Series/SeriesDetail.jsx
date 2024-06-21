@@ -48,3 +48,14 @@ export default function SeriesDetail() {
                   <h2 className="season-title">{season.title}</h2>
                 </div>
               </Link>
+
+))
+) : (
+  <div>No seasons available.</div>
+)}
+      {visibleCount < seasons.length && (
+  <button onClick={showMoreSeasons}>Show More</button>
+)}
+</div>
+);
+}
