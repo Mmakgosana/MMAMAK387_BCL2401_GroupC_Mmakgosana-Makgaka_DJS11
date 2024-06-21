@@ -26,3 +26,16 @@ export default function SeriesDetail() {
             setLoading(false);
           });
       }, [id]);
+
+      onst showMoreSeasons = () => {
+        setVisibleCount((prevCount) => prevCount + 9);
+      };
+    
+      if (loading) {
+        return <div>Loading...</div>;
+      }
+    
+      if (error) {
+        return <div>Error: {error.message}</div>;
+      }
+    
