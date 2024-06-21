@@ -15,3 +15,15 @@ export default function Episodes() {
             }
             return response.json();
           })
+          .then((data) => {
+            const seasons = data.seasons;
+            const allEpisodes = seasons.flatMap((season) => season.episodes);
+            setEpisodes(allEpisodes);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching episodes:", error);
+            setError(error);
+            setLoading(false);
+          });
+      }, [seasonId]);
