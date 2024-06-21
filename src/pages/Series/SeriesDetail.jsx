@@ -27,7 +27,7 @@ export default function SeriesDetail() {
           });
       }, [id]);
 
-      onst showMoreSeasons = () => {
+      const showMoreSeasons = () => {
         setVisibleCount((prevCount) => prevCount + 9);
       };
     
