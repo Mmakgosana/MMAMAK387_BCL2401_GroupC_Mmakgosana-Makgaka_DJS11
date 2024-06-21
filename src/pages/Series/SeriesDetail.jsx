@@ -20,3 +20,9 @@ export default function SeriesDetail() {
             setSeasons(data.seasons);
             setLoading(false);
           })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            setError(error);
+            setLoading(false);
+          });
+      }, [id]);
