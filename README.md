@@ -8,6 +8,10 @@ SEMANTIC UNITS
 
 ADDITIONAL INFORMATION includes a preview, a summarized version of a show containing basic information, which is exposed when an array of different show information is requested. Genre information related to one or more genres that can be assigned to a show.
 
+SET UP INSTRUCTIONS
+Before commencing with the project, I installed Node.js and npm and npm router-dom on my laptop.
+
+
 USAGE EXAMPLES
 1. BROWSING SHOWS
    Navigate to the homepage to see a list of all available shows
@@ -27,13 +31,6 @@ CONTACT INFORMATION
 For any inquiries or feedback, please contact:
 Mmakgosana Makgaka
 makgakammakgosana@gmail.com
-
-   
-
-SET UP INSTRUCTIONS
-Before commencing with the project, I installed Node.js and npm and npm router-dom on my laptop.
-
-
 
 Netlify Link: https://mmakgosana-makgaka1.netlify.app/
 
