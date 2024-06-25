@@ -1,4 +1,5 @@
 TECH TONIC PODCAST APP
+Netlify Link: https://mmakgosana-makgaka1.netlify.app/  
 Introduction: The Tech Tonic Podcast App is a React-based application designed to manage and play podcasts. The data consists of three main semantics units: SHOW, SEASON AND EPISODE. Each SHOW can have multiple SEASONS, and each SEASON consists of multiple EPISODES. The app provides a user-friendly interface for browsing, searching, and listening to podcasts. It also supports previewing basic information about shows and categorizing shows by genre.
 
 SEMANTIC UNITS
@@ -31,8 +32,12 @@ CONTACT INFORMATION
 For any inquiries or feedback, please contact:
 Mmakgosana Makgaka
 makgakammakgosana@gmail.com
+ 
+Challenges Faced: I struggled with setting different login button, search bar and adding episodes to favourite.
 
-Netlify Link: https://mmakgosana-makgaka1.netlify.app/
+Creative Design Choices: I think I have adhered to the project objectives, I would like to use my skills and experience to build more responsive applications and also work on personal projects.
+
+Overall Learning Experience I have enjoyed building the podcast app, adding other features and making it user-friendly, and observing each functioning of different functions coming together was nice to observe. And in future, I would honestly like to build more projects that are similar to this one.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
