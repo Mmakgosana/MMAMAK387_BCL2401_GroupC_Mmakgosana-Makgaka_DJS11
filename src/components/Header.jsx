@@ -20,7 +20,7 @@ export default function Header() {
                 <NavLink to="/about">
                     About
                 </NavLink>
-                <NavLink to="/about">
+                <NavLink to="/favourites">
                     Favourites
                 </NavLink>
             </nav>
