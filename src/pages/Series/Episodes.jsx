@@ -1,80 +1,105 @@
-import { useState, useEffect } from "react";//manage state and side effects in the component
-import { useParams } from "react-router-dom";// extracts the URL parameters
+// episodes.jsx
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 export default function Episodes() {
-    const { seasonId } = useParams();//extracts the 'seasonId' parameter from the URL. This 'seasonId is used to fetch the relevant data
-    const [episodes, setEpisodes] = useState([]);// Stores the list of episodes
-    const [loading, setLoading] = useState(true);// Indicates whether the data is still being fetched
-    const [error, setError] = useState(null);  //Stores any error that occurs during the data fetch
+  const { seasonId } = useParams();
+  const [episodes, setEpisodes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [favorites, setFavorites] = useState({});
 
+  useEffect(() => {
+    fetch(`https://podcast-api.netlify.app/id/${seasonId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const seasons = data.seasons;
+        const allEpisodes = seasons.flatMap((season) => season.episodes);
+        setEpisodes(allEpisodes);
+        setLoading(false);
 
-    //useEffect Hook
-    useEffect(() => {
-        fetch(`https://podcast-api.netlify.app/id/${seasonId}`)//makes a network request to get the data
-          .then((response) => {// Checks if the response is okay, if not, it throws an error
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {// Processes the JSON response, extracts episodes and updates the state
-            const seasons = data.seasons;
-            const allEpisodes = seasons.flatMap((season) => season.episodes);
-            setEpisodes(allEpisodes);
-            setLoading(false);
-          })
-          .catch((error) => {// Catches any error that occur during the fetch process and updates the error state
-            console.error("Error fetching episodes:", error);
-            setError(error);
-            setLoading(false);
-          });
-      }, [seasonId]);// Runs when the component mounts or when the seasonID changes, it fetches data from the API using the seasonID to construcy the URL//
-
-      const addToFavorites = (episode) => {
+        // Initialize favorite status
         const existingFavorites = JSON.parse(localStorage.getItem('favorites')) || {};
-        const showId = episode.episode;
-    
-        if (!existingFavorites[showId]) {
-          existingFavorites[showId] = [];
-        }
-    
-        const isAlreadyFavorite = existingFavorites[showId].some(fav => fav.title === episode.title);
-    
-        if (!isAlreadyFavorite) {
-          existingFavorites[showId].push(episode);
-          localStorage.setItem('favorites', JSON.stringify(existingFavorites));
-          alert(`${episode.title} has been added to your favorites!`);
-        } else {
-          alert(`${episode.title} is already in your favorites!`);
-        }
-      };
-                        
-      //Conditional Rendering
-      if (loading) {
-        return <div>Loading...</div>;
-      }
-    
-      if (error) {
-        return <div>Error: {error.message}</div>;
-      }
-      //Rendering Episodes
-      return (
-        <div className="episodes-container">
-        {episodes.map((episode) => (
+        const showFavorites = existingFavorites[seasonId] || [];
+        const favoritesMap = {};
+        showFavorites.forEach(fav => {
+          favoritesMap[fav.id] = true;
+        });
+        setFavorites(favoritesMap);
+      })
+      .catch((error) => {
+        console.error("Error fetching episodes:", error);
+        setError(error);
+        setLoading(false);
+      });
+  }, [seasonId]);
+
+  const toggleFavorite = (episode) => {
+    const existingFavorites = JSON.parse(localStorage.getItem('favorites')) || {};
+    const showId = seasonId;
+
+    if (!existingFavorites[showId]) {
+      existingFavorites[showId] = [];
+    }
+
+    const isAlreadyFavorite = favorites[episode.episode];
+
+    if (isAlreadyFavorite) {
+      // Remove from favorites
+      existingFavorites[showId] = existingFavorites[showId].filter(fav => fav.id !== episode.episode);
+      delete favorites[episode.episode];
+    } else {
+      // Add to favorites
+      existingFavorites[showId].push(episode);
+      favorites[episode.episode] = true;
+    }
+
+    localStorage.setItem('favorites', JSON.stringify(existingFavorites));
+    setFavorites({ ...favorites });
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return (
+    <div className="episodes-container">
+      <h1 key={`episodesH1`}>Episodes</h1>
+      {episodes.length > 0 ? (
+        episodes.map((episode) => (
           <div key={episode.episode} className="episode-card">
-            <div className="episode-info">
+            {episode.image && <img src={episode.image} alt={episode.title} className="episode-image" />}
+            <div key={`episode${episode.episode}Content`} className="episode-content">
+              <audio controls>
+                <source src={episode.file} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
               <h2>{episode.title}</h2>
               <p>{episode.description}</p>
             </div>
             <FontAwesomeIcon
+              key={`episode${episode.episode}Icon`}
               icon={faHeart}
               className="favorite-icon"
-              onClick={() => addToFavorites(episode)}
+              style={{ color: favorites[episode.episode] ? 'red' : 'grey' }}
+              onClick={() => toggleFavorite(episode)}
             />
           </div>
-        ))}
-      </div>
-    );
-  }
+        ))
+      ) : (
+        <div key={`noEpisodes`}>No episodes available.</div>
+      )}
+    </div>
+  );
+}

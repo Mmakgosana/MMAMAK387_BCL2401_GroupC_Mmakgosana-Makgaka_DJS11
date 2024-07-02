@@ -1,55 +1,56 @@
-import React, { useState, useEffect } from "react";// useState allows you to add state to a functional component and useEffect perform side effects in function component
-import { Link } from "react-router-dom";//A component from 'react-router-dom' that allows for navigation between different routes in the application
+// series.jsx
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import './Series.css';
 
 export default function Series() {
-  //state variables
-  const [series, setSeries] = useState([]);//Stores the list of series data fetched from the API
-  const [error, setError] = useState(null);//Stores any error that occurs during the data fetch
-  const [visibleCount, setVisibleCount] = useState(12);//Determines how many series items are visible on the page
-  const [sortOption, setSortOption] = useState("none"); //Stores the current sorting option selected by the user.
+  const [series, setSeries] = useState([]);
+  const [error, setError] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(12);
+  const [sortOption, setSortOption] = useState("none");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {//Runs the fetch operation when the component mounts.
-    fetch("https://podcast-api.netlify.app")//Gets data from the given URL.
+  useEffect(() => {
+    fetch("https://podcast-api.netlify.app")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         return response.json();
-      })//Checks if the response is OK, then parses the JSON DATA
-      .then((data) => setSeries(data))//Sets the fetched data to the 'series' state
-      .catch((error) => setError(error));//Sets any errors that occur to the 'error' state
+      })
+      .then((data) => setSeries(data))
+      .catch((error) => setError(error));
   }, []);
 
   const showMoreSeries = () => {
     setVisibleCount((prevCount) => prevCount + 9);
-  };// Increases the number of visible series by 9 when called.
+  };
 
   const filterAndSortSeries = (option) => {
-    setSortOption(option);// Create a copy of the series array
-    const sortedSeries = [...series]; // Sorts the series based on the selected option
+    setSortOption(option);
+    const sortedSeries = [...series];
 
     if (option !== "none") {
-      switch (option) {//Sorts the series based on the selected option
+      switch (option) {
         case "most-recent":
-          sortedSeries.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)); // Sort by latest pubDate
-          break;// By the latest publication date
+          sortedSeries.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+          break;
         case "least-recent":
-          sortedSeries.sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate)); // Sort by earliest pubDate
-          break;// By the earliest publication date
+          sortedSeries.sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate));
+          break;
         case "a-z":
-          sortedSeries.sort((a, b) => a.title.localeCompare(b.title)); // Sort by title A-Z
+          sortedSeries.sort((a, b) => a.title.localeCompare(b.title));
           break;
         case "z-a":
-          sortedSeries.sort((a, b) => b.title.localeCompare(a.title)); // Sort by title Z-A
+          sortedSeries.sort((a, b) => b.title.localeCompare(a.title));
           break;
         default:
-          // No change if option is invalid
           break;
       }
     }
-    setSeries(sortedSeries); // Update the displayed series
+    setSeries(sortedSeries);
   };
 
   const addToFavorites = (item) => {
@@ -71,14 +72,23 @@ export default function Series() {
     }
   };
 
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, series.length - 3));
+  };
+
   if (error) {
     return <div>Error: {error.message}</div>;
-  }//If there's an error, it displays an error message
+  }
+
+  const visibleSeries = series.slice(currentIndex, currentIndex + 3);
 
   return (
     <div className="series-container">
       <h1>Series List</h1>
-      
       <div className="filter-buttons">
         <button onClick={() => filterAndSortSeries("most-recent")}>
           Most Recent
@@ -90,6 +100,28 @@ export default function Series() {
         <button onClick={() => filterAndSortSeries("z-a")}>Z-A</button>
         <button onClick={() => filterAndSortSeries("none")}>Reset</button>
       </div>
+      <div className="carousel-container">
+        <button className="carousel-arrow carousel-arrow-left" onClick={handlePrev}>&lt;</button>
+        <div className="carousel-inner" style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}>
+          {visibleSeries.map((item) => (
+            <div key={item.id} className="carousel-item">
+              <Link to={`/series/${item.id}`} key={item.id}>
+                <img src={item.image} alt={item.title} />
+                <div className="carousel-content">
+                  <h2>{item.title}</h2>
+                  <h4>Seasons: {item.seasons}</h4>
+                </div>
+              </Link>
+              <FontAwesomeIcon
+                icon={faHeart}
+                className="favorite-icon"
+                onClick={() => addToFavorites(item)}
+              />
+            </div>
+          ))}
+        </div>
+        <button className="carousel-arrow carousel-arrow-right" onClick={handleNext}>&gt;</button>
+      </div>
       <div className="series-cards">
         {series.slice(0, visibleCount).map((item) => (
           <div key={item.id} className="series-card">
@@ -97,7 +129,8 @@ export default function Series() {
               <img src={item.image} alt={item.title} />
               <div className="card-content">
                 <h2>{item.title}</h2>
-                <h4>seasons : {item.seasons}</h4>
+                <h4>Seasons: {item.seasons}</h4>
+                <h4>Last Updated: {new Date(item.updated).toLocaleDateString()}</h4>
               </div>
             </Link>
             <FontAwesomeIcon
@@ -114,6 +147,3 @@ export default function Series() {
     </div>
   );
 }
-
-    
-    

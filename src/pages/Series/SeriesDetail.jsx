@@ -1,38 +1,39 @@
+// seriesDetail.jsx
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
-// Link allows for the navigation between different routes in the application
-export default function SeriesDetail() {
-  const { id } = useParams();//Extracts the 'id' parameter from the URL
-  const [seasons, setSeasons] = useState([]);//Stores the list of seasons data fetched from the API
-  const [loading, setLoading] = useState(true);//Indicates whether the data is till being loaded
-  const [error, setError] = useState(null);
-  const [visibleCount, setVisibleCount] = useState(12);//Determines how many season items are visible on the page
 
-  useEffect(() => {// Runs the fetch operation when the component mounts or when the 'id' changes
+export default function SeriesDetail() {
+  const { id } = useParams();
+  const [seasons, setSeasons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  useEffect(() => {
     fetch(`https://podcast-api.netlify.app/id/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
-        }//Checks if the response is OK, then parses the JSON data
+        }
         return response.json();
       })
       .then((data) => {
         setSeasons(data.seasons);
-        setLoading(false);//Sets the fetched data (seasons) to the seasons state and stops loading.
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
         setError(error);
         setLoading(false);
       });
-  }, [id]);//Sets any errors that occur to the error state and stops loading.
+  }, [id]);
 
   const showMoreSeasons = () => {
     setVisibleCount((prevCount) => prevCount + 9);
-  };// Increases the number of visible seasons by 9 when called
+  };
 
   const addToFavorites = (season) => {
     const existingFavorites = JSON.parse(localStorage.getItem('favorites')) || {};
@@ -64,26 +65,28 @@ export default function SeriesDetail() {
   return (
     <div className="series-detail-container">
       {seasons.length > 0 ? (
-        seasons.slice(0, visibleCount).map((season) => (//Uses the map function to iterate over the seasons array and create a card for each season
+        seasons.slice(0, visibleCount).map((season) => (
           <div key={season.season} className="season-card-container">
-          <Link to={`/series/${id}/episodes`} key={season.season} className="season-card-link">
-            <div className="season-card">
-              {season.image && <img src={season.image} alt={season.title} className="season-image"  />}
-              <h2 className="season-title">{season.title}</h2>
-              <FontAwesomeIcon
+            <Link to={`/series/${id}/episodes`} className="season-card-link">
+              <div className="season-card">
+                {season.image && <img src={season.image} alt={season.title} className="season-image" />}
+                <h2 className="season-title">{season.title}</h2>
+                <p className="show-updated">
+                  Last Updated: {new Date(season.updated).toLocaleDateString()}
+                </p>
+              </div>
+            </Link>
+            <FontAwesomeIcon
               icon={faHeart}
               className="favorite-icon"
               onClick={() => addToFavorites(season)}
-            /> 
-            </div>
-          </Link>
-       
+            />
           </div>
         ))
       ) : (
         <div>No seasons available.</div>
       )}
-            {visibleCount < seasons.length && (
+      {visibleCount < seasons.length && (
         <button onClick={showMoreSeasons}>Show More</button>
       )}
     </div>
